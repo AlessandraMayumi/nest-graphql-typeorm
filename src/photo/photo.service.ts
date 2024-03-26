@@ -11,9 +11,11 @@ export class PhotoService {
     private readonly photosRepository: Repository<PhotoEntity>,
   ) {}
 
+  findAll = async (): Promise<Photo[]> => {
+    return await this.photosRepository.find();
+  };
+
   findOneById = async (id: number): Promise<Photo> => {
-    const teste = await this.photosRepository.find();
-    console.log(teste);
     const photo = new Photo();
     photo.id = id;
     photo.name = 'string';

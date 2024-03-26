@@ -10,4 +10,9 @@ export class PhotoResolver {
   async photo(@Args('id', { type: () => Int }) id: number) {
     return this.photoService.findOneById(id);
   }
+
+  @Query(() => [Photo])
+  async photoList() {
+    return this.photoService.findAll();
+  }
 }

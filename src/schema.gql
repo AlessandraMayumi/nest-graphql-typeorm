@@ -13,4 +13,5 @@ type Photo {
 
 type Query {
   photo(id: Int!): Photo!
+  photoList: [Photo!]!
 }
