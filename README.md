@@ -1,10 +1,12 @@
 ## Create nest project
+- https://docs.nestjs.com/first-steps
 ```sh
 npm i -g @nestjs/cli
 nest new project-name
 ```
 
 ## Install GraphQL dependencies
+- https://docs.nestjs.com/graphql/quick-start
 ```sh
 npm i @nestjs/graphql @nestjs/apollo @apollo/server @as-integrations/fastify graphql
 ```
@@ -98,7 +100,68 @@ export class PhotoResolver {
 export class AppModule {}
 ```
 
+## TypeORM
+- https://typeorm.io/
+```sh
+npm install typeorm --save
+npm install pg --save
+npm install @nestjs/typeorm
+```
 
+- https://docs.nestjs.com/recipes/sql-typeorm
+
+`app.module.ts`
+```js
+@Module({
+  imports: [
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'test',
+      password: 'test',
+      database: 'test',
+      autoLoadEntities: true,
+      synchronize: true,
+    }),
+```
+
+`src/photo/photo.entity.ts`
+```js
+@Entity()
+export class Photo {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
+    length: 100,
+  })
+  name: string;
+
+  @Column('text')
+  description: string;
+
+  @Column()
+  filename: string;
+
+  @Column()
+  views: number;
+
+  @Column()
+  isPublished: boolean;
+```
+
+`src/photo/photo.module.ts`
+```js
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Photo } from './photo.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Photo])],
+  providers: [PhotoResolver, PhotoService],
+})
+export class PhotoModule {}
+```
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
