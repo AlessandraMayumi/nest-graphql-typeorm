@@ -1,7 +1,104 @@
+## Create nest project
 ```sh
 npm i -g @nestjs/cli
 nest new project-name
 ```
+
+## Install GraphQL dependencies
+```sh
+npm i @nestjs/graphql @nestjs/apollo @apollo/server @as-integrations/fastify graphql
+```
+## GraphQLModule and forRoot() static method
+`src/app.module.ts`
+```js
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
+  ],
+...
+```
+
+## Code first: photo
+### Create photo model
+`src/photo/photo.model.ts`
+```js
+@ObjectType()
+export class Photo {
+  @Field(() => Int)
+  id: number;
+
+  @Field()
+  name: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  filename: string;
+
+  @Field(() => Int)
+  views: number;
+
+  @Field(() => Boolean)
+  isPublished: boolean;
+}
+```
+
+### Create photo service
+`src/photo/photo.service.ts`
+```js
+@Injectable()
+export class PhotoService {
+  constructor() {}
+
+  findOneById = async (id: number): Promise<Photo> => {
+    const photo = new Photo();
+    photo.id = id;
+    photo.name = 'string';
+    photo.description = 'string';
+    photo.filename = 'string';
+    photo.views = 25;
+    photo.isPublished = true;
+    return photo;
+  };
+}
+```
+
+### Create photo resolver
+`src/photo/photo.resolver.ts`
+```js
+@Resolver(() => Photo)
+export class PhotoResolver {
+  constructor(private photoService: PhotoService) {}
+
+  @Query(() => Photo)
+  async photo(@Args('id', { type: () => Int }) id: number) {
+    return this.photoService.findOneById(id);
+  }
+}
+```
+
+### Add PhotoModule
+`src/app.module.ts`
+```js
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+    }),
+    PhotoModule,
+  ],
+  controllers: [],
+  providers: [AppService],
+})
+export class AppModule {}
+```
+
+
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>

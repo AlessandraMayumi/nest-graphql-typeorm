@@ -1,0 +1,16 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Photo {
+  id: Int!
+  name: String!
+  description: String!
+  filename: String!
+  views: Int!
+  isPublished: Boolean!
+}
+
+type Query {
+  photo(id: Int!): Photo!
+}
